@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Uses connection pooling
+  url       = env("POSTGRES_PRISMA_URL")
+  // Uses direct connection, ⚠️ make sure to keep this to `POSTGRES_URL_NON_POOLING`
+  // or you'll have dangling databases from migrations
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Account {
+  id                 Int         @id @default(autoincrement())
+  name               String
+  currency           Currency    @default(PEN)
+  type               AccountType @default(SAVINGS)
+  initialBalance     Float       @default(0)
+  initialBalanceDate DateTime    @default(now())
+  balance            Float       @default(0)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          Int       @id @default(autoincrement())
+  date        DateTime  @default(now())
+  description String
+  amount      Float
+  currency    Currency  @default(PEN)
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
+  account     Account   @relation(fields: [accountId], references: [id])
+  accountId   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum Currency {
+  PEN
+  USD
+  EUR
+  GBP
+  JPY
+  CNY
+}
+
+enum AccountType {
+  CASH
+  CHECKING
+  SAVINGS
+  CREDIT
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  name         String
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+}
