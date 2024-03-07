@@ -58,6 +58,12 @@ enum AccountType {
 model Category {
   id           Int           @id @default(autoincrement())
   name         String
+  type         CategoryType  @default(EXPENSE)
   createdAt    DateTime      @default(now())
   transactions Transaction[]
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
 }
