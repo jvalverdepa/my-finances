@@ -1,0 +1,31 @@
+# Vendors
+**/node_modules/
+
+package-lock.json
+pnpm-lock.yaml
+
+# Build output
+/.next/
+/.vercel/
+/dist/
+/out/
+/build/
+/public/
+
+# External Sources
+**/vendor/
+
+# Test results
+/.coverage
+/coverage
+/test-results/
+/cypress/
+
+# Cache
+/.eslintcache
+
+# Configs
+/.github/
+
+# Prisma
+/prisma
