@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Currency } from "@prisma/client";
+import { AccountType, Currency } from "@prisma/client";
 import { useFormState } from "react-dom";
 
 import { createAccount } from "@/lib/accounts/action";
@@ -18,6 +18,12 @@ import {
 import { SubmitButton } from "@/components/ui/submit-button";
 
 const currencies = [Currency.PEN, Currency.USD];
+const accountTypes = [
+  AccountType.CASH,
+  AccountType.CHECKING,
+  AccountType.SAVINGS,
+  AccountType.CREDIT,
+];
 const initialState = {
   message: "",
   errors: {},
@@ -27,10 +33,10 @@ export const NewAccountForm = () => {
   const [state, formAction] = useFormState(createAccount, initialState);
 
   return (
-    <form action={formAction}>
+    <form action={formAction} autoComplete="off">
       <div className="mt-4">
         <Label htmlFor="name">Name</Label>
-        <Input type="text" name="name" id="name" />
+        <Input autoFocus type="text" name="name" id="name" />
         <div id="amount-error" aria-live="polite" aria-atomic="true">
           {state.errors?.name &&
             state.errors.name.map((error: string) => (
@@ -54,6 +60,31 @@ export const NewAccountForm = () => {
             ))}
           </SelectContent>
         </Select>
+      </div>
+      <div className="mt-4">
+        <Label htmlFor="type">Type</Label>
+        <Select name="type" defaultValue={AccountType.CREDIT}>
+          <SelectTrigger id="type">
+            <SelectValue placeholder="Select" />
+          </SelectTrigger>
+          <SelectContent position="popper">
+            {accountTypes.map((type) => (
+              <SelectItem key={type} value={type}>
+                {type}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="mt-4">
+        <Label htmlFor="initial-balance">Initial Balance</Label>
+        <Input
+          inputMode="decimal"
+          name="initial-balance"
+          id="initial-balance"
+          defaultValue="0.00"
+          onClick={(e) => e.currentTarget.select()}
+        />
       </div>
       <div className="mt-4 flex justify-end gap-4">
         <Button asChild variant="secondary">
