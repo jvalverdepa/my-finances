@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { Currency } from "@prisma/client";
 import { z } from "zod";
 
@@ -15,7 +14,7 @@ const CreateTransaction = z.object({
   accountId: z.string().min(1, "Category is required."),
 });
 
-type State = {
+export type State = {
   errors?: {
     description?: string[];
     amount?: string[];
@@ -64,5 +63,8 @@ export async function createTransaction(prevState: State, formData: FormData) {
   }
 
   revalidatePath("/transactions");
-  redirect("/transactions");
+
+  return {
+    message: "Transaction created successfully.",
+  };
 }

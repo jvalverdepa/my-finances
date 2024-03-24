@@ -14,8 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
+  modal,
   children,
 }: Readonly<{
+  modal: React.ReactNode;
   children: React.ReactNode;
 }>) {
   return (
@@ -25,6 +27,7 @@ export default function RootLayout({
           <Sidebar />
           <main className="col-span-3 lg:col-span-4 lg:border-l">{children}</main>
         </div>
+        <div>{modal}</div>
       </body>
     </html>
   );

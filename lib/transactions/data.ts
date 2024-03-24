@@ -22,3 +22,30 @@ export async function fetchTransactions() {
     throw error;
   }
 }
+
+export async function fetchLatestTransactions() {
+  try {
+    const transactions = await prisma.transaction.findMany({
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        account: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        date: "desc",
+      },
+      take: 5,
+    });
+
+    return transactions;
+  } catch (error) {
+    throw error;
+  }
+}

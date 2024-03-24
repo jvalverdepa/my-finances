@@ -29,7 +29,7 @@ export default async function TransactionsTable() {
               <TableCell>{child.description}</TableCell>
               <TableCell>{child.category?.name}</TableCell>
               <TableCell>{formatDate(child.date)}</TableCell>
-              <TableCell>{formatCurrency(child.amount)}</TableCell>
+              <TableCell>{formatCurrency(child.amount, child.currency)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

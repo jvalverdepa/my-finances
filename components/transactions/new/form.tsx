@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Currency } from "@prisma/client";
 import { useFormState } from "react-dom";
 
-import { createTransaction } from "@/lib/transactions/action";
+import { type createTransaction } from "@/lib/transactions/action";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,18 +28,24 @@ const initialState = {
 };
 
 type NewTransactionFormProps = {
+  action: typeof createTransaction;
   accounts: GetAccountsResponse;
   categories: GetCategoriesResponse;
 };
 
 const FOOD_CATEGORY_ID = "10";
 
-export const NewTransactionForm = ({ accounts, categories }: NewTransactionFormProps) => {
+export const NewTransactionForm = ({
+  action: createTransaction,
+  accounts,
+  categories,
+}: NewTransactionFormProps) => {
+  const router = useRouter();
   const [state, formAction] = useFormState(createTransaction, initialState);
 
   return (
-    <form action={formAction} autoComplete="off">
-      <div className="mt-4">
+    <form className="space-y-4" action={formAction} autoComplete="off">
+      <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
         <Input autoFocus type="text" name="description" id="description" />
         <div id="amount-error" aria-live="polite" aria-atomic="true">
@@ -51,7 +57,7 @@ export const NewTransactionForm = ({ accounts, categories }: NewTransactionFormP
             ))}
         </div>
       </div>
-      <div className="mt-4">
+      <div className="space-y-2">
         <Label htmlFor="currency">Currency</Label>
         <Select name="currency" defaultValue={Currency.USD}>
           <SelectTrigger id="currency">
@@ -66,7 +72,7 @@ export const NewTransactionForm = ({ accounts, categories }: NewTransactionFormP
           </SelectContent>
         </Select>
       </div>
-      <div className="mt-4">
+      <div className="space-y-2">
         <Label htmlFor="amount">Amount</Label>
         <Input
           inputMode="decimal"
@@ -76,7 +82,7 @@ export const NewTransactionForm = ({ accounts, categories }: NewTransactionFormP
           onClick={(e) => e.currentTarget.select()}
         />
       </div>
-      <div className="mt-4">
+      <div className="space-y-2">
         <Label htmlFor="categoryId">Category</Label>
         <Select name="categoryId" defaultValue={FOOD_CATEGORY_ID}>
           <SelectTrigger id="categoryId">
@@ -96,7 +102,7 @@ export const NewTransactionForm = ({ accounts, categories }: NewTransactionFormP
           </SelectContent>
         </Select>
       </div>
-      <div className="mt-4">
+      <div className="space-y-2">
         <Label htmlFor="accountId">Account</Label>
         <Select name="accountId">
           <SelectTrigger id="accountId">
@@ -111,9 +117,9 @@ export const NewTransactionForm = ({ accounts, categories }: NewTransactionFormP
           </SelectContent>
         </Select>
       </div>
-      <div className="mt-4 flex justify-end gap-4">
-        <Button asChild variant="secondary">
-          <Link href="/transactions">Cancel</Link>
+      <div className="flex justify-end gap-4">
+        <Button type="button" variant="secondary" onClick={() => router.back()}>
+          Cancel
         </Button>
         <SubmitButton>Create</SubmitButton>
       </div>
