@@ -55,12 +55,6 @@ export async function fetchLatestTransactions(take = 5) {
   }
 }
 
-export interface TransactionByCategory {
-  category_id: number | null;
-  category_name: string;
-  total: number | null;
-}
-
 export async function fetchTransactionsByCategory() {
   try {
     const categories = await prisma.category.findMany({
@@ -68,31 +62,45 @@ export async function fetchTransactionsByCategory() {
         id: true,
         name: true,
       },
-    });
-    const transactions = await prisma.transaction
-      .groupBy({
-        by: ["categoryId"],
-        _sum: {
-          amount: true,
+      where: {
+        type: {
+          equals: "EXPENSE",
         },
-        orderBy: {
-          _count: {
-            categoryId: "desc",
+      },
+    });
+    const transactions = await prisma.transaction.groupBy({
+      by: ["categoryId", "currency"],
+      _sum: {
+        amount: true,
+      },
+      orderBy: {
+        _count: {
+          categoryId: "desc",
+        },
+      },
+      where: {
+        category: {
+          type: {
+            equals: "EXPENSE",
           },
         },
-      })
-      .then((result) => {
-        return result.map((transaction) => {
-          const category = categories.find((category) => category.id === transaction.categoryId);
-          return {
-            category_id: transaction.categoryId,
-            category_name: category?.name || "Uncategorized",
-            total: transaction._sum.amount,
-          };
-        });
-      });
+      },
+    });
 
-    return transactions;
+    return categories.map((category) => {
+      const result: Record<string, number | string> = {
+        category_id: category.id,
+        category_name: category.name,
+      };
+
+      transactions
+        .filter((t) => t.categoryId === category.id)
+        .forEach((amount) => {
+          result[amount.currency] = amount._sum.amount || 0;
+        });
+
+      return result;
+    });
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch transactions by category.");

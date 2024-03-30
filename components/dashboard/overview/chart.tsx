@@ -1,23 +1,34 @@
 "use client";
 
 import React from "react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Currency } from "@prisma/client";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { type ContentType } from "recharts/types/component/Tooltip";
-
-import { type TransactionByCategory } from "@/lib/transactions/data";
 
 const CustomTooltip: ContentType<number, string> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg bg-white p-2 shadow-md">
-        <p className="text-sm font-semibold">{`${label} : ${payload[0].value}`}</p>
+        <p className="text-sm font-semibold">{label}</p>
+        {payload.map((item) => (
+          <p key={item.dataKey} className="text-sm">{`${item.dataKey}: ${item.value}`}</p>
+        ))}
       </div>
     );
   }
   return null;
 };
 
-export function OverViewChart({ data }: { data: TransactionByCategory[] }) {
+export function OverViewChart({ data }: { data: Record<string, number | string>[] }) {
   const error = console.error;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   console.error = (...args: any) => {
@@ -43,7 +54,9 @@ export function OverViewChart({ data }: { data: TransactionByCategory[] }) {
         <XAxis dataKey="category_name" />
         <YAxis />
         <Tooltip content={CustomTooltip} />
-        <Bar dataKey="total" stackId="a" className="fill-primary" />
+        <Legend />
+        <Bar dataKey={Currency.PEN} stackId="a" className="fill-primary" />
+        <Bar dataKey={Currency.USD} stackId="b" fill="#82ca9d" />
       </BarChart>
     </ResponsiveContainer>
   );
