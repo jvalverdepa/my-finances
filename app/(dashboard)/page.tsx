@@ -3,6 +3,8 @@ import { type Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Overview } from "@/components/dashboard/overview/overview";
 import { TotalExpensesSkeleton, TotalIncomeSkeleton } from "@/components/dashboard/skeletons";
 import { TotalExpenses } from "@/components/dashboard/total-expenses";
 import { TotalIncome } from "@/components/dashboard/total-income";
@@ -33,7 +35,24 @@ export default function DashboardPage() {
             <Suspense fallback={<TotalExpensesSkeleton />}>
               <TotalExpenses />
             </Suspense>
-            <RecentTransactions />
+          </div>
+          <div className="grid gap-4 lg:grid-cols-7">
+            <Card className="lg:col-span-4">
+              <CardHeader>
+                <CardTitle>Overview</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview />
+              </CardContent>
+            </Card>
+            <Card className="lg:col-span-3">
+              <CardHeader>
+                <CardTitle>Recent Transactions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RecentTransactions />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

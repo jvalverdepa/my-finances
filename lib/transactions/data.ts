@@ -54,3 +54,47 @@ export async function fetchLatestTransactions(take = 5) {
     throw new Error(`Failed to fetch latest ${take} transactions.`);
   }
 }
+
+export interface TransactionByCategory {
+  category_id: number;
+  category_name: string;
+  total: number;
+}
+
+export async function fetchTransactionsByCategory() {
+  try {
+    const categories = await prisma.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    const transactions = await prisma.transaction
+      .groupBy({
+        by: ["categoryId"],
+        _sum: {
+          amount: true,
+        },
+        orderBy: {
+          _count: {
+            categoryId: "desc",
+          },
+        },
+      })
+      .then((result) => {
+        return result.map((transaction) => {
+          const category = categories.find((category) => category.id === transaction.categoryId);
+          return {
+            category_id: transaction.categoryId,
+            category_name: category?.name || "Uncategorized",
+            total: transaction._sum.amount,
+          };
+        });
+      });
+
+    return transactions;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch transactions by category.");
+  }
+}
