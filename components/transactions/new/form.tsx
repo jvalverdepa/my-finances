@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Currency } from "@prisma/client";
+import { Currency, type Account } from "@prisma/client";
 import { useFormState } from "react-dom";
 
 import { type createTransaction } from "@/lib/transactions/action";
@@ -18,33 +18,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SubmitButton } from "@/components/ui/submit-button";
-import { type GetAccountsResponse } from "@/app/api/accounts/route";
-import { type GetCategoriesResponse } from "@/app/api/categories/route";
 
 const currencies = [Currency.PEN, Currency.USD];
-const initialState = {
-  message: "",
-  errors: {},
-};
 
 type NewTransactionFormProps = {
   action: typeof createTransaction;
-  accounts: GetAccountsResponse;
-  categories: GetCategoriesResponse;
+  accounts: Account[];
+  categories: Record<string, { id: number; name: string }[]>;
+  defaultCategoryId?: string;
+  defaultAccountId?: string;
 };
 
-const FOOD_CATEGORY_ID = "10";
-
 export const NewTransactionForm = ({
-  action: createTransaction,
+  action,
   accounts,
   categories,
+  defaultCategoryId,
+  defaultAccountId,
 }: NewTransactionFormProps) => {
+  const initialState = { message: "", errors: {} };
   const router = useRouter();
-  const [state, formAction] = useFormState(createTransaction, initialState);
+  const [state, dispatch] = useFormState(action, initialState);
 
   return (
-    <form className="space-y-4" action={formAction} autoComplete="off">
+    <form className="space-y-4" action={dispatch} autoComplete="off">
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
         <Input autoFocus type="text" name="description" id="description" />
@@ -84,7 +81,7 @@ export const NewTransactionForm = ({
       </div>
       <div className="space-y-2">
         <Label htmlFor="categoryId">Category</Label>
-        <Select name="categoryId" defaultValue={FOOD_CATEGORY_ID}>
+        <Select name="categoryId" defaultValue={defaultCategoryId}>
           <SelectTrigger id="categoryId">
             <SelectValue />
           </SelectTrigger>
@@ -104,7 +101,7 @@ export const NewTransactionForm = ({
       </div>
       <div className="space-y-2">
         <Label htmlFor="accountId">Account</Label>
-        <Select name="accountId">
+        <Select name="accountId" defaultValue={defaultAccountId}>
           <SelectTrigger id="accountId">
             <SelectValue />
           </SelectTrigger>

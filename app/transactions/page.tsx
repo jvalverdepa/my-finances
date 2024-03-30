@@ -11,7 +11,9 @@ export default function Page() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
         <Button asChild>
-          <Link href="/transactions/new">New Transaction</Link>
+          <Link href="/transactions/new" scroll={false}>
+            New Transaction
+          </Link>
         </Button>
       </div>
       <Suspense

@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { Currency } from "@prisma/client";
 import { z } from "zod";
 
@@ -36,7 +35,6 @@ export async function createTransaction(prevState: State, formData: FormData) {
 
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
-    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Missing Fields. Failed to create transaction.",
@@ -46,23 +44,15 @@ export async function createTransaction(prevState: State, formData: FormData) {
   // Prepare data for insertion into the database
   const { description, amount, currency, categoryId, accountId } = validatedFields.data;
 
-  try {
-    await prisma.transaction.create({
-      data: {
-        description,
-        amount,
-        currency,
-        categoryId: parseInt(categoryId),
-        accountId: parseInt(accountId),
-      },
-    });
-  } catch (error) {
-    return {
-      message: "Failed to create transaction. Please try again.",
-    };
-  }
-
-  revalidatePath("/transactions");
+  await prisma.transaction.create({
+    data: {
+      description,
+      amount,
+      currency,
+      categoryId: parseInt(categoryId),
+      accountId: parseInt(accountId),
+    },
+  });
 
   return {
     message: "Transaction created successfully.",

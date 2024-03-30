@@ -15,15 +15,19 @@ export async function fetchTransactions() {
           },
         },
       },
+      orderBy: {
+        date: "desc",
+      },
     });
 
     return transactions;
   } catch (error) {
-    throw error;
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch all transactions.");
   }
 }
 
-export async function fetchLatestTransactions() {
+export async function fetchLatestTransactions(take = 5) {
   try {
     const transactions = await prisma.transaction.findMany({
       include: {
@@ -41,11 +45,12 @@ export async function fetchLatestTransactions() {
       orderBy: {
         date: "desc",
       },
-      take: 5,
+      take,
     });
 
     return transactions;
   } catch (error) {
-    throw error;
+    console.error("Database Error:", error);
+    throw new Error(`Failed to fetch latest ${take} transactions.`);
   }
 }

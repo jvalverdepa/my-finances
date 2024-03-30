@@ -20,7 +20,7 @@ export default async function TransactionsTable() {
             <TableHead>Description</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Date</TableHead>
-            <TableHead>Amount</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -29,7 +29,9 @@ export default async function TransactionsTable() {
               <TableCell>{child.description}</TableCell>
               <TableCell>{child.category?.name}</TableCell>
               <TableCell>{formatDate(child.date)}</TableCell>
-              <TableCell>{formatCurrency(child.amount, child.currency)}</TableCell>
+              <TableCell className="text-right">
+                {formatCurrency(child.amount, child.currency)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
