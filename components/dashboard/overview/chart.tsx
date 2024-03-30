@@ -2,18 +2,11 @@
 
 import React from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { type ContentType } from "recharts/types/component/Tooltip";
 
 import { type TransactionByCategory } from "@/lib/transactions/data";
 
-function CustomTooltip({
-  active,
-  payload,
-  label,
-}: {
-  active: boolean;
-  payload: { value: string }[];
-  label: string;
-}) {
+const CustomTooltip: ContentType<number, string> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg bg-white p-2 shadow-md">
@@ -22,7 +15,7 @@ function CustomTooltip({
     );
   }
   return null;
-}
+};
 
 export function OverViewChart({ data }: { data: TransactionByCategory[] }) {
   const error = console.error;
@@ -49,7 +42,7 @@ export function OverViewChart({ data }: { data: TransactionByCategory[] }) {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="category_name" />
         <YAxis />
-        <Tooltip content={<CustomTooltip active={false} payload={[]} label={"xd"} />} />
+        <Tooltip content={CustomTooltip} />
         <Bar dataKey="total" stackId="a" className="fill-primary" />
       </BarChart>
     </ResponsiveContainer>

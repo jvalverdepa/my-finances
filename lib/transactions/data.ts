@@ -56,9 +56,9 @@ export async function fetchLatestTransactions(take = 5) {
 }
 
 export interface TransactionByCategory {
-  category_id: number;
+  category_id: number | null;
   category_name: string;
-  total: number;
+  total: number | null;
 }
 
 export async function fetchTransactionsByCategory() {
