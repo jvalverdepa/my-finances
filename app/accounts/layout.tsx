@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import "./globals.css";
+import "../globals.css";
 
 import { cn } from "@/lib/utils";
 import { Sidebar } from "@/components/sidebar";
@@ -14,10 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  modal,
   children,
 }: Readonly<{
-  modal: React.ReactNode;
   children: React.ReactNode;
 }>) {
   return (
@@ -27,7 +25,6 @@ export default function RootLayout({
           <Sidebar />
           <main className="col-span-3 lg:col-span-4 lg:border-l">{children}</main>
         </div>
-        <div>{modal}</div>
       </body>
     </html>
   );
