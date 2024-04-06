@@ -37,14 +37,7 @@ export default function DashboardPage() {
             </Suspense>
           </div>
           <div className="grid gap-4 lg:grid-cols-7">
-            <Card className="lg:col-span-4">
-              <CardHeader>
-                <CardTitle>Overview</CardTitle>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <Overview />
-              </CardContent>
-            </Card>
+            <Overview />
             <Card className="lg:col-span-3">
               <CardHeader>
                 <CardTitle>Recent Transactions</CardTitle>

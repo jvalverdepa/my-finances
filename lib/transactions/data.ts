@@ -55,7 +55,7 @@ export async function fetchLatestTransactions(take = 5) {
   }
 }
 
-export async function fetchTransactionsByCategory() {
+export async function fetchTransactionsByCategory(from: string, to: string) {
   try {
     const categories = await prisma.category.findMany({
       select: {
@@ -84,6 +84,12 @@ export async function fetchTransactionsByCategory() {
             equals: "EXPENSE",
           },
         },
+        AND: [
+          { createdAt: { gte: new Date(from) } },
+          {
+            createdAt: { lte: new Date(to) },
+          },
+        ],
       },
     });
 
