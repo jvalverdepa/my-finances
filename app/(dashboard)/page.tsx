@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarDateRangePicker } from "@/components/dashboard/overview/date-picker";
 import { Overview } from "@/components/dashboard/overview/overview";
 import { TotalExpensesSkeleton, TotalIncomeSkeleton } from "@/components/dashboard/skeletons";
 import { TotalExpenses } from "@/components/dashboard/total-expenses";
@@ -16,15 +15,7 @@ export const metadata: Metadata = {
   description: "Track your expenses, set budgets and help you stay within your spending plan",
 };
 
-export default function DashboardPage({
-  searchParams,
-}: {
-  searchParams?: {
-    month?: string;
-  };
-}) {
-  const month = searchParams?.month || new Date().toISOString().slice(0, 7);
-
+export default function DashboardPage() {
   return (
     <div className="flex flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
@@ -46,21 +37,7 @@ export default function DashboardPage({
             </Suspense>
           </div>
           <div className="grid gap-4 lg:grid-cols-7">
-            <Card className="lg:col-span-4">
-              <CardHeader>
-                <div className="flex items-center justify-between space-y-2">
-                  <CardTitle>Month overview</CardTitle>
-                  <div className="flex items-center">
-                    <CalendarDateRangePicker key={month} />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <Suspense key={month} fallback={<div>Loading...</div>}>
-                  <Overview />
-                </Suspense>
-              </CardContent>
-            </Card>
+            <Overview />
             <Card className="lg:col-span-3">
               <CardHeader>
                 <CardTitle>Recent Transactions</CardTitle>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Currency } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
 import {
   Bar,
   BarChart,
@@ -28,14 +29,52 @@ const CustomTooltip: ContentType<number, string> = ({ active, payload, label }) 
   return null;
 };
 
-export function OverViewChart({ data }: { data: Record<string, number | string>[] }) {
-  const error = console.error;
+export function OverViewChart({ date }: { date: Date }) {
+  const dateISOString = date.toISOString().slice(0, 10);
+  const { data, isPending, error } = useQuery<Record<string, number | string>[]>({
+    queryKey: ["transactions-by-category", dateISOString],
+    queryFn: () =>
+      fetch(`/api/transactions-by-category?date=${dateISOString}`).then((res) => res.json()),
+  });
+
+  if (isPending)
+    return (
+      <div className="flex h-[350px] w-full">
+        <div className="mx-auto my-0 flex items-center">
+          <svg
+            className="-ml-1 mr-3 h-5 w-5 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+          Loading...
+        </div>
+      </div>
+    );
+
+  if (error) return "An error has occurred: " + error.message;
+
+  const consoleError = console.error;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   console.error = (...args: any) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     if (/defaultProps/.test(args[0])) return;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    error(...args);
+    consoleError(...args);
   };
   return (
     <ResponsiveContainer width="100%" height={350}>
