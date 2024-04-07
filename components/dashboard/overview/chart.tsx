@@ -30,11 +30,10 @@ const CustomTooltip: ContentType<number, string> = ({ active, payload, label }) 
 };
 
 export function OverViewChart({ date }: { date: Date }) {
-  const dateISOString = date.toISOString().slice(0, 10);
+  const month = date.toISOString().slice(0, 7);
   const { data, isPending, error } = useQuery<Record<string, number | string>[]>({
-    queryKey: ["transactions-by-category", dateISOString],
-    queryFn: () =>
-      fetch(`/api/transactions-by-category?date=${dateISOString}`).then((res) => res.json()),
+    queryKey: ["transactions-by-category", month],
+    queryFn: () => fetch(`/api/transactions-by-category?month=${month}`).then((res) => res.json()),
   });
 
   if (isPending)

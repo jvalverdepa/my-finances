@@ -8,9 +8,9 @@ export async function GET(request: NextRequest) {
   currentDate.setDate(1);
 
   const { searchParams } = new URL(request.url);
-  const date = searchParams.get("date");
+  const month = searchParams.get("month");
   const from =
-    date?.concat("T00:00:00") || currentDate.toISOString().slice(0, 10).concat("T00:00:00");
+    month?.concat("-01T00:00:00") || currentDate.toISOString().slice(0, 10).concat("T00:00:00");
   const to = lastDayOfMonth(from).toISOString().slice(0, 10).concat("T23:59:59");
 
   const data = await fetchTransactionsByCategory(from, to);
