@@ -15,7 +15,11 @@ export default async function Page() {
     "use server";
 
     try {
-      await createTransaction(prevState, formData);
+      const { errors, message } = await createTransaction(prevState, formData);
+
+      if (errors) {
+        return { errors, message };
+      }
     } catch (error) {
       return { message: "Failed to create transaction. Please try again." };
     }

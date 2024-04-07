@@ -11,6 +11,7 @@ const CreateTransaction = z.object({
   currency: z.enum([Currency.PEN, Currency.USD]),
   categoryId: z.string().min(1, "Category is required."),
   accountId: z.string().min(1, "Category is required."),
+  date: z.string().min(1, "Date is required."),
 });
 
 export type State = {
@@ -20,6 +21,7 @@ export type State = {
     currency?: string[];
     categoryId?: string[];
     accountId?: string[];
+    date?: string[];
   };
   message?: string | null;
 };
@@ -28,6 +30,7 @@ export async function createTransaction(prevState: State, formData: FormData) {
   const validatedFields = CreateTransaction.safeParse({
     description: formData.get("description"),
     amount: formData.get("amount"),
+    date: formData.get("date"),
     currency: formData.get("currency"),
     categoryId: formData.get("categoryId"),
     accountId: formData.get("accountId"),
@@ -42,7 +45,9 @@ export async function createTransaction(prevState: State, formData: FormData) {
   }
 
   // Prepare data for insertion into the database
-  const { description, amount, currency, categoryId, accountId } = validatedFields.data;
+  const { description, amount, currency, categoryId, accountId, date } = validatedFields.data;
+
+  console.log(date);
 
   await prisma.transaction.create({
     data: {
@@ -51,6 +56,7 @@ export async function createTransaction(prevState: State, formData: FormData) {
       currency,
       categoryId: parseInt(categoryId),
       accountId: parseInt(accountId),
+      date: new Date(`${date}T00:00:00`),
     },
   });
 

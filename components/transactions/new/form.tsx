@@ -6,6 +6,7 @@ import { useFormState } from "react-dom";
 
 import { type createTransaction } from "@/lib/transactions/action";
 import { Button } from "@/components/ui/button";
+import { DatePickerDialog } from "@/components/ui/date-picker-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -113,6 +114,25 @@ export const NewTransactionForm = ({
             ))}
           </SelectContent>
         </Select>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="date">Date Time</Label>
+        <DatePickerDialog name="date" />
+        <div id="date-error" aria-live="polite" aria-atomic="true">
+          {state.errors?.date &&
+            state.errors.date.map((error: string) => (
+              <p className="mt-2 text-sm text-red-500" key={error}>
+                {error}
+              </p>
+            ))}
+        </div>
+      </div>
+      <div id="error-message" aria-live="polite" aria-atomic="true">
+        {state.message && (
+          <p className="mt-2 text-sm text-red-500" key={state.message}>
+            {state.message}
+          </p>
+        )}
       </div>
       <div className="flex justify-end gap-4">
         <Button type="button" variant="secondary" onClick={() => router.back()}>
