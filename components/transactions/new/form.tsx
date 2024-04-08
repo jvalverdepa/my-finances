@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { TimePicker } from "@/components/ui/time-picker";
 
 const currencies = [Currency.PEN, Currency.USD];
 
@@ -117,14 +118,29 @@ export const NewTransactionForm = ({
       </div>
       <div className="space-y-2">
         <Label htmlFor="date">Date Time</Label>
-        <DatePickerDialog name="date" />
-        <div id="date-error" aria-live="polite" aria-atomic="true">
-          {state.errors?.date &&
-            state.errors.date.map((error: string) => (
-              <p className="mt-2 text-sm text-red-500" key={error}>
-                {error}
-              </p>
-            ))}
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <DatePickerDialog name="date" />
+            <div id="date-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.date &&
+                state.errors.date.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+          <div className="flex-1">
+            <TimePicker name="time" />
+            <div id="time-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.time &&
+                state.errors.time.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
         </div>
       </div>
       <div id="error-message" aria-live="polite" aria-atomic="true">

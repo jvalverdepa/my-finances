@@ -12,6 +12,7 @@ const CreateTransaction = z.object({
   categoryId: z.string().min(1, "Category is required."),
   accountId: z.string().min(1, "Category is required."),
   date: z.string().min(1, "Date is required."),
+  time: z.string().min(1, "Time is required."),
 });
 
 export type State = {
@@ -22,6 +23,7 @@ export type State = {
     categoryId?: string[];
     accountId?: string[];
     date?: string[];
+    time?: string[];
   };
   message?: string | null;
 };
@@ -31,6 +33,7 @@ export async function createTransaction(prevState: State, formData: FormData) {
     description: formData.get("description"),
     amount: formData.get("amount"),
     date: formData.get("date"),
+    time: formData.get("time"),
     currency: formData.get("currency"),
     categoryId: formData.get("categoryId"),
     accountId: formData.get("accountId"),
@@ -45,7 +48,7 @@ export async function createTransaction(prevState: State, formData: FormData) {
   }
 
   // Prepare data for insertion into the database
-  const { description, amount, currency, categoryId, accountId, date } = validatedFields.data;
+  const { description, amount, currency, categoryId, accountId, date, time } = validatedFields.data;
 
   console.log(date);
 
@@ -56,7 +59,7 @@ export async function createTransaction(prevState: State, formData: FormData) {
       currency,
       categoryId: parseInt(categoryId),
       accountId: parseInt(accountId),
-      date: new Date(`${date}T00:00:00`),
+      date: new Date(`${date}T${time}:00`),
     },
   });
 

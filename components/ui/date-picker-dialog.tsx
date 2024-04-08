@@ -36,18 +36,19 @@ export const DatePickerDialog = ({ name }: { name: string }) => {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="relative">
       <Input
         id={name}
         name={name}
         placeholder={format(new Date(), "y-MM-dd")}
-        className="placeholder:opacity-50"
+        className="inline-block  pr-10"
         value={inputValue}
         onChange={handleInputChange}
+        onClick={(e) => e.currentTarget.select()}
       />
       <Popover open={isPopperOpen} onOpenChange={setIsPopperOpen}>
         <PopoverTrigger asChild>
-          <Button variant="ghost">
+          <Button className="absolute right-0" variant="link">
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
