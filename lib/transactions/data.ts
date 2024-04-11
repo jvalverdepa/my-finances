@@ -85,9 +85,9 @@ export async function fetchTransactionsByCategory(from: string, to: string) {
           },
         },
         AND: [
-          { createdAt: { gte: new Date(from) } },
+          { date: { gte: new Date(from) } },
           {
-            createdAt: { lte: new Date(to) },
+            date: { lte: new Date(to) },
           },
         ],
       },
