@@ -50,8 +50,6 @@ export async function createTransaction(prevState: State, formData: FormData) {
   // Prepare data for insertion into the database
   const { description, amount, currency, categoryId, accountId, date, time } = validatedFields.data;
 
-  console.log(date);
-
   await prisma.transaction.create({
     data: {
       description,

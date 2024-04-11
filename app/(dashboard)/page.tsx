@@ -8,7 +8,7 @@ import { Overview } from "@/components/dashboard/overview/overview";
 import { TotalExpensesSkeleton, TotalIncomeSkeleton } from "@/components/dashboard/skeletons";
 import { TotalExpenses } from "@/components/dashboard/total-expenses";
 import { TotalIncome } from "@/components/dashboard/total-income";
-import { RecentTransactions } from "@/components/recent-sales";
+import { RecentTransactions } from "@/components/recent-transactions";
 
 export const metadata: Metadata = {
   title: "Dashboard",
