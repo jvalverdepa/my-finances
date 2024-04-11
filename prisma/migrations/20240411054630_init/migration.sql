@@ -2,14 +2,17 @@
 CREATE TYPE "Currency" AS ENUM ('PEN', 'USD', 'EUR', 'GBP', 'JPY', 'CNY');
 
 -- CreateEnum
-CREATE TYPE "AccountType" AS ENUM ('CHECKING', 'SAVINGS', 'CREDIT');
+CREATE TYPE "AccountType" AS ENUM ('CASH', 'CHECKING', 'SAVINGS', 'CREDIT');
+
+-- CreateEnum
+CREATE TYPE "CategoryType" AS ENUM ('INCOME', 'EXPENSE');
 
 -- CreateTable
 CREATE TABLE "Account" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "currency" "Currency" NOT NULL DEFAULT 'PEN',
-    "type" "AccountType" NOT NULL DEFAULT 'CHECKING',
+    "type" "AccountType" NOT NULL DEFAULT 'SAVINGS',
     "initialBalance" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "initialBalanceDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "balance" DOUBLE PRECISION NOT NULL DEFAULT 0,
@@ -38,6 +41,7 @@ CREATE TABLE "Transaction" (
 CREATE TABLE "Category" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "type" "CategoryType" NOT NULL DEFAULT 'EXPENSE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
